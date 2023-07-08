@@ -23,14 +23,14 @@ export const profileTable = sqliteTable("profile", {
 });
 
 /**
- * Poe 
+ * Resume 
  * 
  * @field id - integer
  * @field content - string
  * @field profileId - FK - string 
  * @field createdAt - string ('ISO8601')
  */
-export const poeTable = sqliteTable("poe", {
+export const resumeTable = sqliteTable("resume", {
   id: integer("id").primaryKey(),
   profileId: integer("profile_id").references(() => profileTable.id),
   content: text("content").notNull(),
