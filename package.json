@@ -41,9 +41,13 @@
     "vite-tsconfig-paths": "4.2.0"
   },
   "dependencies": {
+    "@libsql/client": "^0.3.0",
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
+    "drizzle-kit": "^0.19.3",
+    "drizzle-orm": "^0.27.0",
     "tailwind-merge": "^1.13.2",
-    "tailwindcss-animate": "^1.0.6"
+    "tailwindcss-animate": "^1.0.6",
+    "zod": "^3.21.4"
   }
 }
