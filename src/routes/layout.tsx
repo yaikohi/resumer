@@ -20,7 +20,7 @@ export const onRequest: RequestHandler = (event) => {
     throw event.redirect(302, `/api/auth/signin`);
   }
 
-  console.log(session);
+  // console.log(session);
 };
 
 export default component$(() => {

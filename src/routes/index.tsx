@@ -1,14 +1,24 @@
 import { component$ } from "@builder.io/qwik";
-import { type DocumentHead } from "@builder.io/qwik-city";
+import { type DocumentHead, Form, routeAction$ } from "@builder.io/qwik-city";
 import {
   useAuthSession,
   useAuthSignin,
   useAuthSignout,
 } from "~/routes/plugin@auth";
+import { postResume } from "~/services/resume";
+
+export const usePostResume = routeAction$(async (data, requestEvent) => {
+  const session = requestEvent.sharedMap.get("session");
+  const newResume = await postResume({
+    userId: session.user.id,
+    content: data.content as string,
+  });
+  console.log(newResume);
+});
 
 export default component$(() => {
   const session = useAuthSession();
-  console.log(session.value)
+  const postResume = usePostResume();
   return (
     <>
       <h1 class="text-3xl">Resumer</h1>
@@ -30,6 +40,13 @@ export default component$(() => {
           </div>
         </div>
       )}
+      {/* Creating a new resume!*/}
+      <div>
+        <Form action={postResume}>
+          <textarea name="content" />
+          <button>post</button>
+        </Form>
+      </div>
 
       {/* Container of list of resumes*/}
       <div class="my-8">
@@ -76,7 +93,10 @@ const SignInButton = component$(() => {
     <>
       <button
         onClick$={() =>
-          signIn.submit({ providerId: "github", options: { callbackUrl: "/" } })
+          signIn.submit({
+            providerId: "github",
+            options: { callbackUrl: "/" },
+          })
         }
         class="px-3 py-2 bg-secondary text-secondary-foreground"
       >
