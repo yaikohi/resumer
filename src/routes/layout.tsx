@@ -19,8 +19,6 @@ export const onRequest: RequestHandler = (event) => {
   if (!session || new Date(session.expires) < new Date()) {
     throw event.redirect(302, `/api/auth/signin`);
   }
-
-  // console.log(session);
 };
 
 export default component$(() => {
