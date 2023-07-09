@@ -11,8 +11,6 @@ export const postResume = async ({
   content,
   userId,
 }: Pick<NewResume, "content" | "userId">): Promise<Resume> => {
-  console.log("POSTED: {content, userId}");
-  console.log({ content, userId });
   return await db
     .insert(resumes)
     .values({

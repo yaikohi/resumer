@@ -84,11 +84,11 @@ export default function DrizzleAdapter(
         .returning()
         .get();
 
-      /** 
+      /**
        * I have no idea how to fix this
-       * 
+       *
        * src: https://github.com/nextauthjs/next-auth/blob/92383d5254c95910a87fb28908a6a3a8da295ae7/packages/adapter-drizzle/src/sqlite/index.ts#L140C40-L140C40
-       * 
+       *
        * @ts-ignore */
       const account: AdapterAccount = {
         ...updatedAccount,
