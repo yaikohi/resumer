@@ -31,12 +31,6 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
         return updatedSessionObj;
       },
     },
-    events: {
-      async signIn(message) {
-        console.log("signIn event triggered!");
-        console.log({ message });
-      },
-    },
     providers: [
       GitHub({
         clientId: env.get("GITHUB_ID")!,
