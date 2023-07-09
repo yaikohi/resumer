@@ -5,35 +5,63 @@
  * Drizzle docs
  * @see https://orm.drizzle.team/docs/
  */
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import type { AdapterAccount } from "@auth/core/adapters";
+import {
+  integer,
+  primaryKey,
+  sqliteTable,
+  text,
+} from "drizzle-orm/sqlite-core";
 
-/**
- * Profile
- *
- * @field id - integer
- * @field username - string
- * @field name - string
- * @field createdAt - string ('ISO8601')
- */
-export const profileTable = sqliteTable("profile", {
-  id: integer("id").primaryKey(),
-  username: text("username"),
+export const users = sqliteTable("users", {
+  id: text("id").notNull().primaryKey(),
   name: text("name"),
-  email: text("email"),
-  createdAt: text("created_at").default(new Date().toISOString()),
-  // githubSessionId: integer("github_session_id").references(
-  //   () => githubSessionTable.id
-  // ),
+  email: text("email").notNull(),
+  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+  image: text("image"),
 });
 
-export const githubSessionTable = sqliteTable("github_session", {
-  id: integer("id").primaryKey(),
-  profileId: integer("profile_id").references(() => profileTable.id),
-  username: text("username"),
-  name: text("name"),
-  email: text("email"),
-  createdAt: text("created_at").default(new Date().toISOString()),
+export const accounts = sqliteTable("accounts", {
+  userId: text("userId").references(() => users.id, {
+    onDelete: "cascade",
+  }),
+  type: text("type").$type<AdapterAccount["type"]>().notNull(),
+  provider: text("provider").notNull(),
+  providerAccountId: text("providerAccountId").notNull(),
+  refresh_token: text("refresh_token"),
+  access_token: text("access_token"),
+  expires_at: integer("expires_at"),
+  token_type: text("token_type"),
+  scope: text("scope"),
+  id_token: text("id_token"),
+  session_state: text("session_state"),
+}, (account) => ({
+  compoundKey: primaryKey(account.provider, account.providerAccountId),
+}));
+
+export const sessions = sqliteTable("sessions", {
+  sessionToken: text("sessionToken").notNull().primaryKey(),
+  userId: text("userId").notNull().references(() => users.id, {
+    onDelete: "cascade",
+  }),
+  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
 });
+
+export const verificationTokens = sqliteTable("verificationToken", {
+  identifier: text("identifier").notNull(),
+  token: text("token").notNull(),
+  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+}, (vt) => ({ compoundKey: primaryKey(vt.identifier, vt.token) }));
+
+export const defaultSchema = {
+  users: users,
+  accounts: accounts,
+  sessions: sessions,
+  verificationTokens: verificationTokens,
+};
+
+export type DefaultSchema = typeof defaultSchema;
+export interface CustomSchema extends DefaultSchema {}
 
 /**
  * Resume
@@ -44,8 +72,8 @@ export const githubSessionTable = sqliteTable("github_session", {
  * @field createdAt - string ('ISO8601')
  */
 export const resumeTable = sqliteTable("resume", {
-  id: integer("id").primaryKey(),
-  profileId: integer("profile_id").references(() => profileTable.id),
+  id: text("id").notNull().primaryKey(),
+  userId: text("userId").references(() => users.id),
   content: text("content").notNull(),
   createdAt: text("created_at").default(new Date().toISOString()),
 });

@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "da73fc90-5a4a-4b65-b50f-dd023a80106d",
-  "prevId": "d31f9ebc-ab97-4c9b-935e-cd40916e9fa8",
+  "id": "c77931f6-b1c8-4b2b-8a74-a06d6618a171",
+  "prevId": "da73fc90-5a4a-4b65-b50f-dd023a80106d",
   "tables": {
     "accounts": {
       "name": "accounts",
@@ -140,7 +140,7 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
-          "default": "'2023-07-09T11:14:13.471Z'"
+          "default": "'2023-07-09T11:20:58.842Z'"
         }
       },
       "indexes": {},

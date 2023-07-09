@@ -1,6 +1,9 @@
 import { serverAuth$ } from "@builder.io/qwik-auth";
-import GitHub from "@auth/core/providers/github";
 import type { Provider } from "@auth/core/providers";
+import GitHub from "@auth/core/providers/github";
+import { db } from "~/db";
+import DrizzleAdapter from "~/adapters/DrizzleAdapter";
+import { accounts, sessions, users, verificationTokens } from "~/db/schema";
 
 export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
   serverAuth$(({ env }) => ({
@@ -10,6 +13,7 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
       maxAge: 5 * 24 * 60 * 60,
     },
     callbacks: {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       async signIn({ user, account, profile, email, credentials }) {
         console.log("signIn callback triggered!");
         // console.log({ user, account, profile, email, credentials });
@@ -33,4 +37,10 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
         },
       }),
     ] as Provider[],
+    adapter: DrizzleAdapter(db, {
+      users,
+      accounts,
+      sessions,
+      verificationTokens,
+    }),
   }));
