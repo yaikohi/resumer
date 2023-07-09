@@ -15,9 +15,20 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
     callbacks: {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       async signIn({ user, account, profile, email, credentials }) {
-        console.log("signIn callback triggered!");
-        // console.log({ user, account, profile, email, credentials });
         return true;
+      },
+      async session({ session, token, user }) {
+        const updatedSessionObj = {
+          accessToken: token,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            image: user.image,
+          },
+          expires: session.expires,
+        };
+        return updatedSessionObj;
       },
     },
     events: {
