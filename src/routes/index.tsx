@@ -8,6 +8,7 @@ import {
 
 export default component$(() => {
   const session = useAuthSession();
+  console.log(session.value)
   return (
     <>
       <h1 class="text-3xl">Resumer</h1>
@@ -62,7 +63,7 @@ export default component$(() => {
           </li>*/}
         </ul>
         <div class="flex flex-col gap-2">
-          {session.value?.user?.email ? <SignOutButton /> : <SignInButton />}
+          {session.value?.user?.name ? <SignOutButton /> : <SignInButton />}
         </div>
       </div>
     </>

@@ -8,6 +8,13 @@
       "when": 1688851855252,
       "tag": "0000_brown_professor_monster",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1688853840069,
+      "tag": "0001_furry_the_spike",
+      "breakpoints": true
     }
   ]
 }
