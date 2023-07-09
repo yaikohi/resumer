@@ -14,11 +14,11 @@ CREATE TABLE `accounts` (
 	FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE TABLE `resume` (
-	`id` integer PRIMARY KEY NOT NULL,
+CREATE TABLE `resumes` (
+	`id` text PRIMARY KEY NOT NULL,
 	`userId` text,
 	`content` text NOT NULL,
-	`created_at` text DEFAULT '2023-07-09T11:11:32.848Z',
+	`created_at` text DEFAULT '2023-07-09T11:47:07.401Z',
 	FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint

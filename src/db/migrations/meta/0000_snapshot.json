@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "d31f9ebc-ab97-4c9b-935e-cd40916e9fa8",
+  "id": "f6cff881-e432-44e5-b85f-3db9e4fc3084",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "accounts": {
@@ -110,12 +110,12 @@
         }
       }
     },
-    "resume": {
-      "name": "resume",
+    "resumes": {
+      "name": "resumes",
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "text",
           "primaryKey": true,
           "notNull": true,
           "autoincrement": false
@@ -140,14 +140,14 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
-          "default": "'2023-07-09T11:11:32.848Z'"
+          "default": "'2023-07-09T11:47:07.401Z'"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "resume_userId_users_id_fk": {
-          "name": "resume_userId_users_id_fk",
-          "tableFrom": "resume",
+        "resumes_userId_users_id_fk": {
+          "name": "resumes_userId_users_id_fk",
+          "tableFrom": "resumes",
           "tableTo": "users",
           "columnsFrom": [
             "userId"

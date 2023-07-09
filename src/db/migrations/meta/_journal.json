@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1688901092855,
-      "tag": "0000_known_sinister_six",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1688901253479,
-      "tag": "0001_uneven_abomination",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1688901658850,
-      "tag": "0002_orange_ulik",
+      "when": 1688903227408,
+      "tag": "0000_premium_mordo",
       "breakpoints": true
     }
   ]
