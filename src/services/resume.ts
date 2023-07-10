@@ -11,6 +11,7 @@ export const postResume = async ({
   content,
   userId,
 }: Pick<NewResume, "content" | "userId">): Promise<Resume> => {
+  console.log("Inserting resume into db.");
   return await db
     .insert(resumes)
     .values({
@@ -27,6 +28,7 @@ export const postResume = async ({
  * Retrieves all resumes that are viewable by non-signed-in users.
  */
 export const getPublicResumes = async () => {
+  console.log("Retrieving all resumes from db.");
   return await db
     .select({
       id: resumes.id,
