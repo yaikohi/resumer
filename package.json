@@ -9,8 +9,12 @@
     "build": "qwik build",
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
+    "build.server": "vite build -c adapters/vercel-edge/vite.config.ts",
     "build.types": "tsc --incremental --noEmit",
-    "deploy": "echo 'Run \"npm run qwik add\" to install a server adapter'",
+    "dbgen": "drizzle-kit generate:sqlite",
+    "dbpush": "drizzle-kit push:sqlite",
+    "dbstudio": "exec drizzle-kit studio",
+    "deploy": "vercel deploy",
     "dev": "vite --mode ssr",
     "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
     "fmt": "prettier --write .",
@@ -18,10 +22,7 @@
     "lint": "eslint \"src/**/*.ts*\"",
     "preview": "qwik build preview && vite preview --open",
     "start": "vite --open --mode ssr",
-    "qwik": "qwik",
-    "dbpush": "drizzle-kit push:sqlite",
-    "dbgen": "drizzle-kit generate:sqlite",
-    "dbstudio": "exec drizzle-kit studio"
+    "qwik": "qwik"
   },
   "devDependencies": {
     "@auth/core": "^0.7.1",
@@ -41,6 +42,7 @@
     "tailwindcss": "^3.3.2",
     "typescript": "5.1.6",
     "undici": "5.22.1",
+    "vercel": "^29.1.1",
     "vite": "4.4.0",
     "vite-tsconfig-paths": "4.2.0"
   },
