@@ -3,13 +3,14 @@ import { type DocumentHead, routeLoader$, z } from "@builder.io/qwik-city";
 import type { InitialValues } from "@modular-forms/qwik";
 import { formAction$, useForm, zodForm$ } from "@modular-forms/qwik";
 import { PostResumeTextArea } from "~/components/post-resume";
+import { getRelativeTimeString } from "~/lib/dates";
 import { cn } from "~/lib/utils";
 import {
   useAuthSession,
   useAuthSignin,
   useAuthSignout,
 } from "~/routes/plugin@auth";
-import { postResume } from "~/services/resume";
+import { getPublicResumes, postResume } from "~/services/resume";
 
 const resumeSchema = z.object({
   content: z
@@ -20,10 +21,14 @@ const resumeSchema = z.object({
 
 type TResumeForm = z.infer<typeof resumeSchema>;
 
+export const useGetResumes = routeLoader$(async () => {
+  return await getPublicResumes();
+});
+
 export const usePostResumeLoader = routeLoader$<InitialValues<TResumeForm>>(
   () => ({
     content: "",
-  }),
+  })
 );
 
 export const usePostResumeAction = formAction$<TResumeForm>(
@@ -34,11 +39,12 @@ export const usePostResumeAction = formAction$<TResumeForm>(
       content: data.content,
     });
   },
-  zodForm$(resumeSchema),
+  zodForm$(resumeSchema)
 );
 
 export default component$(() => {
   const session = useAuthSession();
+  const resumes = useGetResumes();
 
   const [postResumeform, { Form, Field }] = useForm<TResumeForm>({
     loader: usePostResumeLoader(),
@@ -113,7 +119,7 @@ export default component$(() => {
                   "text-sm text-primary-foreground font-medium",
                   "transition-colors",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                  "disabled:pointer-events-none disabled:opacity-50",
+                  "disabled:pointer-events-none disabled:opacity-50"
                 )}
               >
                 Send resume
@@ -126,36 +132,21 @@ export default component$(() => {
       <div class="my-8">
         {/* List of resumes */}
         <ul class="flex flex-col w-full">
-          {
-            /* Resume           <li class="w-full mx-auto">
-            <Resume
-              name={"bob"}
-              username={"bobber"}
-              date={"2023-07-07"}
-              content={"This is a post on resumer! it can be long or short but I guess the maximum amount of characters will be 200 because bisky also does it like that."}
-            />
-            <Resume
-              name={"bob"}
-              username={"bobber"}
-              date={"2023-07-07"}
-              content={"This is a post on resumer! it can be long or short but I guess the maximum amount of characters will be 200 because bisky also does it like that."}
-            />
-            <Resume
-              name={"bob"}
-              username={"bobber"}
-              date={"2023-07-07"}
-              content={"This is a post on resumer! it can be long or short but I guess the maximum amount of characters will be 200 because bisky also does it like that."}
-            />
-            <Resume
-              name={"bob"}
-              username={"bobber"}
-              date={"2023-07-07"}
-              content={"This is a post on resumer! it can be long or short but I guess the maximum amount of characters will be 200 because bisky also does it like that."}
-            />
-          </li>*/
-          }
+          {resumes.value.map((resume) => (
+            <>
+              <li class="w-full mx-auto">
+                <Resume
+                  name={resume.user.name}
+                  username={resume.user.username}
+                  content={resume.content}
+                  date={resume.createdAt}
+                  image={resume.user.image}
+                />
+              </li>
+            </>
+          ))}
         </ul>
-        <div class="absolute w-full bottom-0">
+        <div class="fixed w-full bottom-0">
           <div class="w-full backdrop-blur-sm bg-secondary/20">
             {session.value?.user?.name ? <SignOutButton /> : <SignInButton />}
           </div>
@@ -174,7 +165,8 @@ const SignInButton = component$(() => {
           signIn.submit({
             providerId: "github",
             options: { callbackUrl: "/" },
-          })}
+          })
+        }
         class="px-3 py-2 bg-secondary text-secondary-foreground rounded-full"
       >
         Sign in
@@ -198,36 +190,53 @@ const SignOutButton = component$(() => {
 });
 
 interface ResumeProps {
-  name: string;
+  name?: string | null;
   username: string;
   content: string;
   date: string;
+  image?: string | null;
 }
 /**
  * A resume is a 'tweet' on resumer.
  */
 export const Resume = component$<ResumeProps>(
-  ({ name, username, content, date }) => {
+  ({ name, username, content, date, image }) => {
     return (
       <>
-        <div class="flex flex-col mx-auto max-w-xl border-border border-[1px]">
-          <div class="flex justify-between place-items-center">
-            <div class="flex flex-row gap-1">
-              <p class="text-sm font-medium">{name}</p>
-              <p class="text-sm">@{username}</p>
-            </div>
-            <p class="text-xs">{date}</p>
+        <div class="flex mx-auto max-w-xl border-border border-[1px]">
+          <div class="max-w-[48px] m-2">
+            {image ? (
+              <img
+                src={image}
+                alt={username}
+                class="aspect-square rounded-full"
+                height={48}
+                width={48}
+              />
+            ) : (
+              <div class="h-[48px] aspect-square  rounded-full bg-secondary"></div>
+            )}
           </div>
-          <div class="flex flex-col">
-            <p>{content}</p>
-            <div class="flex justify-end">
-              <div class="bg-red-200 h-8 w-8"></div>
+          <div class="flex-col flex w-full p-2">
+            <div class="flex justify-between place-items-center">
+              <div class="flex flex-row gap-1">
+                <p class="text-sm font-medium">
+                  {name ? `${name}` : `${username}`}
+                </p>
+                <p class="text-sm">@{username}</p>
+              </div>
+              <p class="text-xs">
+                {getRelativeTimeString(new Date(date), new Date())}
+              </p>
+            </div>
+            <div class="flex flex-col h-full pt-1 pb-8">
+              <p class="text-sm break-words">{content}</p>
             </div>
           </div>
         </div>
       </>
     );
-  },
+  }
 );
 export const head: DocumentHead = {
   title: "resumer",

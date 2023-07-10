@@ -5,10 +5,13 @@ import { db } from "~/db";
 import DrizzleAdapter from "~/adapters/DrizzleAdapter";
 import { accounts, sessions, users, verificationTokens } from "~/db/schema";
 import { z } from "zod";
+import { getUsernameById } from "~/lib/getUsernameById";
+import { addUsernameToDb } from "~/services/username";
 
 export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
   serverAuth$(({ env }) => {
-    const isDev = env.get("NODE_ENV") !== undefined ||
+    const isDev =
+      env.get("NODE_ENV") !== undefined ||
       env.get("NODE_ENV") === "development";
 
     const githubEnvSchema = z.object({
@@ -18,24 +21,24 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
 
     const schema = isDev
       ? githubEnvSchema.safeParse({
-        GITHUB_SECRET: env.get("DEV_GITHUB_SECRET"),
-        GITHUB_ID: env.get("DEV_GITHUB_ID"),
-      })
+          GITHUB_SECRET: env.get("DEV_GITHUB_SECRET"),
+          GITHUB_ID: env.get("DEV_GITHUB_ID"),
+        })
       : githubEnvSchema.safeParse({
-        GITHUB_SECRET: env.get("GITHUB_SECRET"),
-        GITHUB_ID: env.get("GITHUB_ID"),
-      });
+          GITHUB_SECRET: env.get("GITHUB_SECRET"),
+          GITHUB_ID: env.get("GITHUB_ID"),
+        });
 
     if (!schema.success) {
       throw new Error(
-        "Something went wrong with parsing the .env variables for github oauth.",
+        "Something went wrong with parsing the .env variables for github oauth."
       );
     }
 
     const GITHUB_SECRET = schema.data.GITHUB_SECRET;
     const GITHUB_ID = schema.data.GITHUB_ID;
 
-    return ({
+    return {
       secret: env.get("AUTH_SECRET"),
       trustHost: true,
       session: {
@@ -44,6 +47,17 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
       callbacks: {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         async signIn({ user, account, profile, email, credentials }) {
+          // if username exists in db, dont fetch username.
+          const existingUsername = await getUsernameById(user.id);
+          if (!existingUsername) {
+            const username = (
+              await getUsernameById(account?.providerAccountId as string)
+            ).login as string;
+
+            await addUsernameToDb(user.id, username);
+            console.log("username added:", username);
+          }
+
           return true;
         },
         async session({ session, token, user }) {
@@ -77,5 +91,5 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
         sessions,
         verificationTokens,
       }),
-    });
+    };
   });

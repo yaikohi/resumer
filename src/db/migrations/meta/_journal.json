@@ -15,6 +15,20 @@
       "when": 1688911116965,
       "tag": "0001_magenta_the_spike",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1689001442409,
+      "tag": "0002_fearless_iron_patriot",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1689001476567,
+      "tag": "0003_loose_martin_li",
+      "breakpoints": true
     }
   ]
 }

@@ -1,1 +1,4 @@
 src/db/migrations
+drizzle.config.ts
+.vscode
+README.md

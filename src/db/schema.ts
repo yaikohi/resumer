@@ -87,5 +87,13 @@ export const resumes = sqliteTable("resumes", {
     .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
   content: text("content").notNull(),
-  createdAt: text("createdAt").default(new Date().toISOString()),
+  createdAt: text("createdAt").default(new Date().toISOString()).notNull(),
+});
+
+export const usernames = sqliteTable("usernames", {
+  id: text("id").notNull().primaryKey(),
+  userId: text("userId").references(() => users.id, {
+    onDelete: "cascade",
+  }),
+  username: text("username").notNull(),
 });
