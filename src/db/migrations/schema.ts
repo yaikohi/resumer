@@ -1,12 +1,9 @@
 import {
   sqliteTable,
-  AnySQLiteColumn,
-  foreignKey,
   primaryKey,
   text,
   integer,
 } from "drizzle-orm/sqlite-core";
-import { sql } from "drizzle-orm";
 
 export const accounts = sqliteTable(
   "accounts",
