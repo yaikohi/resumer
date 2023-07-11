@@ -32,7 +32,7 @@ export const usePostResumeAction = formAction$<TResumeForm>(
       content: data.content,
     });
   },
-  zodForm$(resumeSchema)
+  zodForm$(resumeSchema),
 );
 
 export const usePostResumeLoader = routeLoader$<InitialValues<TResumeForm>>(
@@ -40,7 +40,7 @@ export const usePostResumeLoader = routeLoader$<InitialValues<TResumeForm>>(
     return {
       content: "",
     };
-  }
+  },
 );
 
 export const useGetResumes = routeLoader$(async () => {
@@ -124,7 +124,7 @@ export default component$(() => {
                     "text-sm text-primary-foreground font-medixum",
                     "transition-colors",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                    "disabled:pointer-events-none disabled:opacity-50"
+                    "disabled:pointer-events-none disabled:opacity-50",
                   )}
                 >
                   Send resume
@@ -141,6 +141,8 @@ export default component$(() => {
           {resumes.value.map((resume) => (
             <li class="w-full mx-auto" key={resume.id}>
               <Resume
+                signedInUserOwnsResume={resume.user.id ===
+                  session.value?.user?.id}
                 name={resume.user.name}
                 username={resume.user.username}
                 content={resume.content}
