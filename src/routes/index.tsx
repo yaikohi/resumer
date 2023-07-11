@@ -61,9 +61,9 @@ export default component$(() => {
     <>
       <h1 class="text-3xl">Resumer</h1>
       <p>Send resumes on resumer, a qwik twitter.</p>
-      <div class={cn("flex", "w-full", "p-2")}>
-        {/* User profile section? */}
-        {session.value?.user?.name && (
+      {session.value?.user?.name && (
+        <div class={cn("flex", "w-full", "p-2")}>
+          {/* User profile section */}
           <div class="my-8">
             <div class="flex place-items-center gap-2">
               {session.value.user.image && (
@@ -77,15 +77,15 @@ export default component$(() => {
               )}
             </div>
           </div>
-        )}
-        {/* Creating a new resume!*/}
-        {session.value?.user?.name && (
+
+          {/* Creating a new resume!*/}
           <div class={cn("w-full")}>
             <Form class="flex flex-col place-items-center gap-2">
               <Field name="content">
                 {(field, props) => {
-                  // TEST IF THIS ALSO WORKS IN PROD!
                   // this clears the form after submitting.
+                  // 1. submit -> 2. signal update -> 3. rerender <PostResumeTextArea> component -> 4. empty form.
+                  // it seems to be a little buggy still :/
                   field.value = "";
                   return (
                     <>
@@ -121,7 +121,7 @@ export default component$(() => {
                     "inline-flex items-center justify-center ",
                     "px-4 py-3 rounded-3xl",
                     "bg-primary ring-offset-background ",
-                    "text-sm text-primary-foreground font-medium",
+                    "text-sm text-primary-foreground font-medixum",
                     "transition-colors",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                     "disabled:pointer-events-none disabled:opacity-50"
@@ -132,24 +132,22 @@ export default component$(() => {
               </div>
             </Form>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       {/* Container of list of resumes*/}
       <div class="my-8">
         {/* List of resumes */}
         <ul class="flex flex-col w-full">
           {resumes.value.map((resume) => (
-            <>
-              <li class="w-full mx-auto">
-                <Resume
-                  name={resume.user.name}
-                  username={resume.user.username}
-                  content={resume.content}
-                  date={resume.createdAt}
-                  image={resume.user.image}
-                />
-              </li>
-            </>
+            <li class="w-full mx-auto" key={resume.id}>
+              <Resume
+                name={resume.user.name}
+                username={resume.user.username}
+                content={resume.content}
+                date={resume.createdAt}
+                image={resume.user.image}
+              />
+            </li>
           ))}
         </ul>
         <div class="fixed w-full bottom-0">
