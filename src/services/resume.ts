@@ -45,6 +45,7 @@ export const getPublicResumes = async () => {
     .from(resumes)
     .innerJoin(users, eq(users.id, resumes.userId))
     .innerJoin(usernames, eq(users.id, usernames.userId))
+    .limit(100)
     .orderBy(desc(resumes.createdAt))
     .all();
 };
