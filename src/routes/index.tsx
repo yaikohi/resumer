@@ -32,6 +32,7 @@ export const useResumeCreateAction = formAction$<TResumeCreateForm>(
       content: data.content,
     });
   },
+<<<<<<< Updated upstream
   zodForm$(resumeCreateSchema)
 );
 
@@ -42,6 +43,18 @@ export const useResumeCreateLoader = routeLoader$<
     content: "",
   };
 });
+=======
+  zodForm$(resumeSchema),
+);
+
+export const usePostResumeLoader = routeLoader$<InitialValues<TResumeForm>>(
+  () => {
+    return {
+      content: "",
+    };
+  },
+);
+>>>>>>> Stashed changes
 
 export const useGetResumes = routeLoader$(async () => {
   return await getPublicResumes();
@@ -58,9 +71,11 @@ export default component$(() => {
 
   return (
     <>
-      <h1 class="text-3xl">Resumer</h1>
-      <p>Send resumes on resumer, a qwik twitter.</p>
-      {session.value?.user.name && (
+      <div class="p-4">
+        <h1 class="text-3xl">Resumer</h1>
+        <p>Send resumes on resumer, a qwik twitter.</p>
+      </div>
+      {session.value?.user?.name && (
         <div class={cn("flex", "w-full", "p-2")}>
           {/* User profile section */}
           <div class="my-8">
@@ -123,7 +138,7 @@ export default component$(() => {
                     "text-sm text-primary-foreground font-medixum",
                     "transition-colors",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                    "disabled:pointer-events-none disabled:opacity-50"
+                    "disabled:pointer-events-none disabled:opacity-50",
                   )}
                 >
                   Send resume
