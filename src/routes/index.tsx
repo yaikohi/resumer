@@ -26,11 +26,6 @@ export const useResumeCreateAction = formAction$<TResumeCreateForm>(
       userId: session.user.id,
       content: data.content,
     });
-
-    console.log("Resume sent!", {
-      userId: session.user.id,
-      content: data.content,
-    });
   },
   zodForm$(resumeCreateSchema),
 );
