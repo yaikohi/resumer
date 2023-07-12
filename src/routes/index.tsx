@@ -32,7 +32,6 @@ export const useResumeCreateAction = formAction$<TResumeCreateForm>(
       content: data.content,
     });
   },
-<<<<<<< Updated upstream
   zodForm$(resumeCreateSchema)
 );
 
@@ -43,9 +42,6 @@ export const useResumeCreateLoader = routeLoader$<
     content: "",
   };
 });
-=======
-  zodForm$(resumeSchema),
-);
 
 export const usePostResumeLoader = routeLoader$<InitialValues<TResumeForm>>(
   () => {
