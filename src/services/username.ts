@@ -14,7 +14,7 @@ export const addUsernameToDb = async (userId: string, username: string) => {
     .run();
 };
 
-export const getUsernameById = async (userId: string) => {
+export const getUsernameByIdFromDb = async (userId: string) => {
   console.log("Retrieving username from db.\nuserId:", userId);
   return await db
     .selectDistinct()

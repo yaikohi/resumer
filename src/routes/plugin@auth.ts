@@ -6,7 +6,7 @@ import DrizzleAdapter from "~/adapters/DrizzleAdapter";
 import { accounts, sessions, users, verificationTokens } from "~/db/schema";
 import { z } from "zod";
 import { getUsernameById } from "~/lib/getUsernameById";
-import { addUsernameToDb } from "~/services/username";
+import { addUsernameToDb, getUsernameByIdFromDb } from "~/services/username";
 
 export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
   serverAuth$(({ env }) => {
@@ -48,8 +48,8 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         async signIn({ user, account, profile, email, credentials }) {
           // if username exists in db, dont fetch username.
-          const existingUsername = await getUsernameById(user.id);
-          if (!existingUsername) {
+          const existingUsername = await getUsernameByIdFromDb(user.id);
+          if (!existingUsername.username) {
             const username = (
               await getUsernameById(account?.providerAccountId as string)
             ).login as string;
