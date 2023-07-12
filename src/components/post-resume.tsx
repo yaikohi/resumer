@@ -40,7 +40,7 @@ export const PostResumeTextArea = component$<PostResumeTextAreaProps>(
         )}
         <textarea
           {...props}
-          placeholder="What did you think about today?"
+          placeholder="How fast and resumable are you going right now?"
           id={props.name}
           aria-invalid={!!error}
           aria-errormessage={`${props.name}-error`}
