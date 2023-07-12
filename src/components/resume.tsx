@@ -44,23 +44,26 @@ export const Resume = component$<ResumeProps>(
             showContextMenu.value = false;
           }
         }
-      })
+      }),
     );
     return (
       <>
         <div class="flex mx-auto max-w-xl border-border border-[1px]">
           <div class="max-w-[48px] m-2">
-            {image ? (
-              <img
-                src={image}
-                alt={username}
-                class="aspect-square rounded-full"
-                height={48}
-                width={48}
-              />
-            ) : (
-              <div class="h-[48px] aspect-square  rounded-full bg-secondary"></div>
-            )}
+            {image
+              ? (
+                <img
+                  src={image}
+                  alt={username}
+                  class="aspect-square rounded-full"
+                  height={48}
+                  width={48}
+                />
+              )
+              : (
+                <div class="h-[48px] aspect-square  rounded-full bg-secondary">
+                </div>
+              )}
           </div>
           <div class="flex-col flex w-full p-2">
             <div class="flex justify-between place-items-center">
@@ -92,29 +95,29 @@ export const Resume = component$<ResumeProps>(
                         "bg-background",
                         "top-2 -left-[168px]",
                         "border-border border-2",
-                        "rounded-xl"
+                        "rounded-xl",
                       )}
                     >
                       <div class="flex flex-col">
-                        <button
-                          onClick$={async () =>
-                            await deleteResume.submit({ id })
-                          }
-                          class={cn(
-                            "flex",
-                            "rounded-xl",
-                            "place-items-center",
-                            "hover:bg-muted/50",
-                            "p-2"
-                          )}
-                        >
-                          {signedInUserOwnsResume && (
+                        {signedInUserOwnsResume && (
+                          <button
+                            onClick$={async () =>
+                              await deleteResume.submit({ id })}
+                            class={cn(
+                              "flex",
+                              "rounded-xl",
+                              "place-items-center",
+                              "hover:bg-muted/50",
+                              "p-2",
+                            )}
+                          >
                             <div class="ml-1 mr-2">
                               <HiTrashOutline />
                             </div>
-                          )}
-                          <span>{"Delete"}</span>
-                        </button>
+
+                            <span>{"Delete"}</span>
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -128,5 +131,5 @@ export const Resume = component$<ResumeProps>(
         </div>
       </>
     );
-  }
+  },
 );
