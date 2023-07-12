@@ -49,3 +49,11 @@ export const getPublicResumes = async () => {
     .orderBy(desc(resumes.createdAt))
     .all();
 };
+
+/**
+ * Deletes the resume by id
+ */
+export const deleteResumeFromDb = async (resumeId: string) => {
+  console.log("Deleted resume with id:", resumeId);
+  return await db.delete(resumes).where(eq(resumes.id, resumeId)).run();
+};

@@ -10,16 +10,16 @@ import { cn } from "~/lib/utils";
 import { useAuthSession } from "~/routes/plugin@auth";
 import { getPublicResumes, postResume } from "~/services/resume";
 
-const resumeSchema = z.object({
+const resumeCreateSchema = z.object({
   content: z
     .string()
     .min(1, "Please enter something to post a resume!")
     .max(200, "That's too many characters for a resume!"),
 });
 
-type TResumeForm = z.infer<typeof resumeSchema>;
+type TResumeCreateForm = z.infer<typeof resumeCreateSchema>;
 
-export const usePostResumeAction = formAction$<TResumeForm>(
+export const useResumeCreateAction = formAction$<TResumeCreateForm>(
   async (data, requestEvent) => {
     const session = requestEvent.sharedMap.get("session");
     await postResume({
@@ -32,16 +32,16 @@ export const usePostResumeAction = formAction$<TResumeForm>(
       content: data.content,
     });
   },
-  zodForm$(resumeSchema),
+  zodForm$(resumeCreateSchema)
 );
 
-export const usePostResumeLoader = routeLoader$<InitialValues<TResumeForm>>(
-  () => {
-    return {
-      content: "",
-    };
-  },
-);
+export const useResumeCreateLoader = routeLoader$<
+  InitialValues<TResumeCreateForm>
+>(() => {
+  return {
+    content: "",
+  };
+});
 
 export const useGetResumes = routeLoader$(async () => {
   return await getPublicResumes();
@@ -50,18 +50,17 @@ export const useGetResumes = routeLoader$(async () => {
 export default component$(() => {
   const session = useAuthSession();
   const resumes = useGetResumes();
-
-  const [postResumeform, { Form, Field }] = useForm<TResumeForm>({
-    loader: usePostResumeLoader(),
-    action: usePostResumeAction(),
-    validate: zodForm$(resumeSchema),
+  const [postResumeform, { Form, Field }] = useForm<TResumeCreateForm>({
+    loader: useResumeCreateLoader(),
+    action: useResumeCreateAction(),
+    validate: zodForm$(resumeCreateSchema),
   });
 
   return (
     <>
       <h1 class="text-3xl">Resumer</h1>
       <p>Send resumes on resumer, a qwik twitter.</p>
-      {session.value?.user?.name && (
+      {session.value?.user.name && (
         <div class={cn("flex", "w-full", "p-2")}>
           {/* User profile section */}
           <div class="my-8">
@@ -124,7 +123,7 @@ export default component$(() => {
                     "text-sm text-primary-foreground font-medixum",
                     "transition-colors",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                    "disabled:pointer-events-none disabled:opacity-50",
+                    "disabled:pointer-events-none disabled:opacity-50"
                   )}
                 >
                   Send resume
@@ -141,8 +140,10 @@ export default component$(() => {
           {resumes.value.map((resume) => (
             <li class="w-full mx-auto" key={resume.id}>
               <Resume
-                signedInUserOwnsResume={resume.user.id ===
-                  session.value?.user?.id}
+                id={resume.id}
+                signedInUserOwnsResume={
+                  resume.user.id === session.value?.user.id
+                }
                 name={resume.user.name}
                 username={resume.user.username}
                 content={resume.content}
@@ -154,7 +155,7 @@ export default component$(() => {
         </ul>
         <div class="fixed w-full bottom-0">
           <div class="w-full backdrop-blur-sm bg-secondary/20">
-            {session.value?.user?.name ? <SignOutButton /> : <SignInButton />}
+            {session.value?.user.name ? <SignOutButton /> : <SignInButton />}
           </div>
         </div>
       </div>
