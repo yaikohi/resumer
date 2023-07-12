@@ -32,7 +32,7 @@ export const useResumeCreateAction = formAction$<TResumeCreateForm>(
       content: data.content,
     });
   },
-  zodForm$(resumeCreateSchema)
+  zodForm$(resumeCreateSchema),
 );
 
 export const useResumeCreateLoader = routeLoader$<
@@ -42,15 +42,6 @@ export const useResumeCreateLoader = routeLoader$<
     content: "",
   };
 });
-
-export const usePostResumeLoader = routeLoader$<InitialValues<TResumeForm>>(
-  () => {
-    return {
-      content: "",
-    };
-  },
-);
->>>>>>> Stashed changes
 
 export const useGetResumes = routeLoader$(async () => {
   return await getPublicResumes();
@@ -152,9 +143,8 @@ export default component$(() => {
             <li class="w-full mx-auto" key={resume.id}>
               <Resume
                 id={resume.id}
-                signedInUserOwnsResume={
-                  resume.user.id === session.value?.user.id
-                }
+                signedInUserOwnsResume={resume.user.id ===
+                  session.value?.user.id}
                 name={resume.user.name}
                 username={resume.user.username}
                 content={resume.content}
