@@ -11,6 +11,7 @@ export const addUsernameToDb = async (userId: string, username: string) => {
       userId,
       username,
     })
+    .onConflictDoNothing({ target: usernames.id })
     .run();
 };
 

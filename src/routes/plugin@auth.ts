@@ -47,15 +47,15 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         async signIn({ user, account, profile, email, credentials }) {
           // if username exists in db, dont fetch username.
-          const existingUsername = await getUsernameByIdFromDb(user.id);
-          if (!existingUsername.username) {
-            const username = (
-              await getUsernameById(account?.providerAccountId as string)
-            ).login;
+          // const existingUsername = await getUsernameByIdFromDb(user.id);
+          // if (!existingUsername.userId) {
+          const username = (
+            await getUsernameById(account?.providerAccountId as string)
+          ).login;
 
-            await addUsernameToDb(user.id, username);
-            console.log("username added:", username);
-          }
+          await addUsernameToDb(user.id, username);
+          console.log("username added:", username);
+          // }
 
           return true;
         },
