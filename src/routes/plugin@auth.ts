@@ -10,8 +10,7 @@ import { addUsernameToDb, getUsernameByIdFromDb } from "~/services/username";
 
 export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
   serverAuth$(({ env }) => {
-    const isDev =
-      env.get("NODE_ENV") !== undefined ||
+    const isDev = env.get("NODE_ENV") !== undefined ||
       env.get("NODE_ENV") === "development";
 
     const githubEnvSchema = z.object({
@@ -21,17 +20,17 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
 
     const schema = isDev
       ? githubEnvSchema.safeParse({
-          GITHUB_SECRET: env.get("DEV_GITHUB_SECRET"),
-          GITHUB_ID: env.get("DEV_GITHUB_ID"),
-        })
+        GITHUB_SECRET: env.get("DEV_GITHUB_SECRET"),
+        GITHUB_ID: env.get("DEV_GITHUB_ID"),
+      })
       : githubEnvSchema.safeParse({
-          GITHUB_SECRET: env.get("GITHUB_SECRET"),
-          GITHUB_ID: env.get("GITHUB_ID"),
-        });
+        GITHUB_SECRET: env.get("GITHUB_SECRET"),
+        GITHUB_ID: env.get("GITHUB_ID"),
+      });
 
     if (!schema.success) {
       throw new Error(
-        "Something went wrong with parsing the .env variables for github oauth."
+        "Something went wrong with parsing the .env variables for github oauth.",
       );
     }
 
@@ -52,7 +51,7 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
           if (!existingUsername.username) {
             const username = (
               await getUsernameById(account?.providerAccountId as string)
-            ).login as string;
+            ).login;
 
             await addUsernameToDb(user.id, username);
             console.log("username added:", username);
