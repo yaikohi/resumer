@@ -6,7 +6,7 @@ import DrizzleAdapter from "~/adapters/DrizzleAdapter";
 import { accounts, sessions, users, verificationTokens } from "~/db/schema";
 import { z } from "zod";
 import { getUsernameById } from "~/lib/getUsernameById";
-import { addUsernameToDb, getUsernameByIdFromDb } from "~/services/username";
+import { addUsernameToDb } from "~/services/username";
 
 export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
   serverAuth$(({ env }) => {
