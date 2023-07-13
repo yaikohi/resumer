@@ -1,7 +1,7 @@
 import { component$, Slot } from "@builder.io/qwik";
 import { type DocumentHead, routeLoader$, z } from "@builder.io/qwik-city";
 import type { InitialValues } from "@modular-forms/qwik";
-import { formAction$, useForm, zodForm$ } from "@modular-forms/qwik";
+import { formAction$, reset, useForm, zodForm$ } from "@modular-forms/qwik";
 import { PostResumeTextArea } from "~/components/post-resume";
 import { Resume } from "~/components/resume";
 import { SignInButton } from "~/components/sign-in-button";
@@ -61,7 +61,7 @@ export default component$(() => {
   );
 });
 
-{/* The profile header component of the page that shows when you're logged in.*/}
+{/* The profile header component of the page that shows when you're logged in.*/ }
 export const ResumeProfile = component$(() => {
   const session = useAuthSession();
   return (
@@ -87,7 +87,7 @@ export const ResumeProfile = component$(() => {
   );
 });
 
-{/* Where the resumes are created... */}
+{/* Where the resumes are created... */ }
 const resumeCreateSchema = z.object({
   content: z
     .string()
@@ -126,13 +126,9 @@ export const ResumeCreator = component$(() => {
   return (
     <>
       <div class={cn("w-full")}>
-        <Form class="flex flex-col place-items-center gap-2">
+        <Form class="flex flex-col place-items-center gap-2" onSubmit$={() => reset(postResumeform)}>
           <Field name="content">
             {(field, props) => {
-              // this clears the form after submitting.
-              // 1. submit -> 2. signal update -> 3. rerender <PostResumeTextArea> component -> 4. empty form.
-              // it seems to be a little buggy still :/
-              field.value = "";
               return (
                 <>
                   <PostResumeTextArea

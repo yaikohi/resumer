@@ -102,7 +102,7 @@ export const usernames = sqliteTable("usernames", {
   id: text("id").notNull().primaryKey(),
   userId: text("userId").references(() => users.id, {
     onDelete: "cascade",
-  }),
+  }).notNull(),
   username: text("username").notNull(),
   createdAt: text("createdAt").default(new Date().toISOString()).notNull(),
 });
