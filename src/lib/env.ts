@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /** Node server only check. */
-export const isDev = process.env.NODE_ENV === "development"
+export const isDev = process.env.NODE_ENV === "development";
 
 /** (In Node env) retrieves .env variables for db. */
 export function getNodeDbVars() {
@@ -11,15 +11,10 @@ export function getNodeDbVars() {
   });
 
   const dbVars = dbSchema.safeParse(
-    isDev
-      ? {
-        LIBSQL_DB_URL: process.env["DEV_LIBSQL_DB_URL"],
-        LIBSQL_DB_AUTH_TOKEN: process.env["DEV_LIBSQL_DB_AUTH_TOKEN"],
-      }
-      : {
-        LIBSQL_DB_URL: process.env["LIBSQL_DB_URL"],
-        LIBSQL_DB_AUTH_TOKEN: process.env["LIBSQL_DB_AUTH_TOKEN"],
-      },
+    {
+      LIBSQL_DB_URL: process.env["LIBSQL_DB_URL"],
+      LIBSQL_DB_AUTH_TOKEN: process.env["LIBSQL_DB_AUTH_TOKEN"],
+    },
   );
 
   if (!dbVars.success) {

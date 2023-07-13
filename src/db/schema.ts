@@ -40,7 +40,7 @@ export const accounts = sqliteTable(
   },
   (account) => ({
     compoundKey: primaryKey(account.provider, account.providerAccountId),
-  })
+  }),
 );
 
 export const sessions = sqliteTable("sessions", {
@@ -60,7 +60,7 @@ export const verificationTokens = sqliteTable(
     token: text("token").notNull(),
     expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
   },
-  (vt) => ({ compoundKey: primaryKey(vt.identifier, vt.token) })
+  (vt) => ({ compoundKey: primaryKey(vt.identifier, vt.token) }),
 );
 
 export const defaultSchema = {
@@ -76,10 +76,10 @@ export interface CustomSchema extends DefaultSchema {}
 /**
  * Resume
  *
- * @field id - integer
+ * @field id - string
+ * @field userId  -  string
  * @field content - string
- * @field profileId - FK - string
- * @field createdAt - string ('ISO8601')
+ * @field createdAt - string
  */
 export const resumes = sqliteTable("resumes", {
   id: text("id").notNull().primaryKey(),
@@ -90,10 +90,19 @@ export const resumes = sqliteTable("resumes", {
   createdAt: text("createdAt").default(new Date().toISOString()).notNull(),
 });
 
+/**
+ * Username (table)
+ *
+ * @field id - string
+ * @field userId - string
+ * @field username - string
+ * @field createdAt - string
+ */
 export const usernames = sqliteTable("usernames", {
   id: text("id").notNull().primaryKey(),
   userId: text("userId").references(() => users.id, {
     onDelete: "cascade",
   }),
   username: text("username").notNull(),
+  createdAt: text("createdAt").default(new Date().toISOString()).notNull(),
 });

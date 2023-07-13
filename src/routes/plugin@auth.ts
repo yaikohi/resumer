@@ -6,7 +6,11 @@ import DrizzleAdapter from "~/adapters/DrizzleAdapter";
 import { accounts, sessions, users, verificationTokens } from "~/db/schema";
 import { z } from "zod";
 import { getUsernameById } from "~/lib/getUsernameById";
-import { addUsernameToDb } from "~/services/username";
+import {
+  addUsernameToDb,
+  checkIfUsernameExists,
+} from "~/services/username";
+import { getAccountById } from "~/services/account";
 
 export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
   serverAuth$(({ env }) => {
@@ -46,17 +50,6 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
       callbacks: {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         async signIn({ user, account, profile, email, credentials }) {
-          // if username exists in db, dont fetch username.
-          // const existingUsername = await getUsernameByIdFromDb(user.id);
-          // if (!existingUsername.userId) {
-          const username = (
-            await getUsernameById(account?.providerAccountId as string)
-          ).login;
-
-          await addUsernameToDb(user.id, username);
-          console.log("username added:", username);
-          // }
-
           return true;
         },
         async session({ session, token, user }) {
@@ -70,6 +63,20 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
             },
             expires: session.expires,
           };
+
+          // if username exists in db, dont fetch username.
+          const usernameExists = await checkIfUsernameExists(user.id);
+
+          if (!usernameExists) {
+            const account = await getAccountById(user.id)
+            const username = (
+              await getUsernameById(account.providerAccountId as string)
+            ).login;
+
+            await addUsernameToDb(user.id, username);
+            console.log("username added:", username);
+          }
+
           return updatedSessionObj;
         },
       },
