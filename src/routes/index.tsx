@@ -24,7 +24,7 @@ export default component$(() => {
         <p>Send resumes on resumer, a qwik twitter.</p>
       </div>
 
-      {session.value?.user?.name && (
+      {session.value?.user.name && (
         <>
           <ResumeProfile>
             <ResumeCreator />

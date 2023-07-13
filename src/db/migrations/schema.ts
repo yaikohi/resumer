@@ -1,6 +1,4 @@
-import { sqliteTable, AnySQLiteColumn, foreignKey, primaryKey, text, integer } from "drizzle-orm/sqlite-core"
-import { sql } from "drizzle-orm"
-
+import { sqliteTable, primaryKey, text, integer } from "drizzle-orm/sqlite-core"
 
 export const accounts = sqliteTable("accounts", {
 	userId: text("userId").references(() => users.id, { onDelete: "cascade" } ),
