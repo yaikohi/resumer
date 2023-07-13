@@ -48,7 +48,21 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
         maxAge: 5 * 24 * 60 * 60,
       },
       events: {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        async signIn({ user, account }) {
+          console.log("User signed in!", { user })
+          // if username exists in db, dont fetch username.
+          const usernameExists = await checkIfUsernameExists(user.id);
+
+          if (!usernameExists) {
+            const username = (
+              await getUsernameById(account?.providerAccountId as string)
+            ).login;
+
+            await addUsernameToDb(user.id, username);
+            console.log("username added:", username);
+          }
+
+        },
         async createUser({ user }) {
           console.log("New user!")
           console.log("\n", user)
