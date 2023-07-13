@@ -47,6 +47,26 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
       session: {
         maxAge: 5 * 24 * 60 * 60,
       },
+      events: {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        async createUser({ user }) {
+          console.log("New user!")
+          console.log("\n", user)
+          // if username exists in db, dont fetch username.
+          const usernameExists = await checkIfUsernameExists(user.id);
+
+          if (!usernameExists) {
+            const account = await getAccountById(user.id)
+            const username = (
+              await getUsernameById(account.providerAccountId as string)
+            ).login;
+
+            await addUsernameToDb(user.id, username);
+            console.log("username added:", username);
+          }
+
+        }
+      },
       callbacks: {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         async signIn({ user, account, profile, email, credentials }) {
@@ -64,18 +84,6 @@ export const { onRequest, useAuthSession, useAuthSignin, useAuthSignout } =
             expires: session.expires,
           };
 
-          // if username exists in db, dont fetch username.
-          const usernameExists = await checkIfUsernameExists(user.id);
-
-          if (!usernameExists) {
-            const account = await getAccountById(user.id)
-            const username = (
-              await getUsernameById(account.providerAccountId as string)
-            ).login;
-
-            await addUsernameToDb(user.id, username);
-            console.log("username added:", username);
-          }
 
           return updatedSessionObj;
         },
