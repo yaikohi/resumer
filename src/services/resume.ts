@@ -2,7 +2,7 @@ import { desc, eq } from "drizzle-orm";
 import { db } from "~/db";
 import { resumes, usernames, users } from "~/db/schema";
 import type { NewResume, Resume } from "~/db/types";
-import { ratelimit } from "~/lib/ratelimiter";
+// import { ratelimit } from "~/lib/ratelimiter";
 
 /**
  * Creates a new resume (post) in the database.
@@ -12,10 +12,10 @@ export const postResume = async ({
   content,
   userId,
 }: Pick<NewResume, "content" | "userId">): Promise<Resume> => {
-  const { success } = await ratelimit.limit(userId);
-  if (!success) {
-    throw new Error("Ratelimit exceeded; try again in 10 seconds.");
-  }
+  // const { success } = await ratelimit.limit(userId);
+  // if (!success) {
+  //   throw new Error("Ratelimit exceeded; try again in 10 seconds.");
+  // }
   console.log("Inserting resume into db.");
   return await db
     .insert(resumes)
