@@ -33,7 +33,7 @@ export default component$(() => {
       )}
 
       {/* Container of list of resumes*/}
-      <div class="my-8">
+      <div class="mt-8">
         {/* List of resumes */}
         <ul class="flex flex-col w-full">
           {resumes.value.map((resume) => (
