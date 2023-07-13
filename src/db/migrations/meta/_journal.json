@@ -36,6 +36,27 @@
       "when": 1689144346051,
       "tag": "0004_flashy_the_santerians",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1689245181936,
+      "tag": "0005_loose_rogue",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1689245322876,
+      "tag": "0006_large_mother_askani",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1689245446402,
+      "tag": "0007_flowery_christian_walker",
+      "breakpoints": true
     }
   ]
 }
