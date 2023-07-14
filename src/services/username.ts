@@ -1,19 +1,18 @@
 import { eq } from "drizzle-orm";
 import { db } from "~/db";
 import { usernames } from "~/db/schema";
-import type { Username, NewUsername } from "~/db/types"
+import type { NewUsername, Username } from "~/db/types";
 
 /** Non exported statement only used in this file. */
-async function createUsernameTable({ id,
-  userId,
-  username,
-  createdAt }: NewUsername) {
+async function createUsernameTable(
+  { id, userId, username, createdAt }: NewUsername,
+) {
   return await db.insert(usernames).values({
     id,
     userId,
     username,
     createdAt,
-  }).run()
+  }).run();
 }
 
 async function getUsernameTableByUserId({ userId }: Pick<Username, "userId">) {
@@ -22,22 +21,35 @@ async function getUsernameTableByUserId({ userId }: Pick<Username, "userId">) {
   ).get();
 }
 
-type NewUsernameParams = Pick<NewUsername, "userId" | "username">
-export async function createUsernameService({ userId, username }: NewUsernameParams) {
+type NewUsernameParams = Pick<NewUsername, "userId" | "username">;
+export async function createUsernameService(
+  { userId, username }: NewUsernameParams,
+) {
   console.log("Adding username to db:", username);
   return await createUsernameTable({
     id: crypto.randomUUID(),
     userId,
     username,
-    createdAt: new Date().toISOString()
-  })
+    createdAt: new Date().toISOString(),
+  });
 }
 
-type UsernameExistsParams = Pick<Username, "userId">
-export async function checkIfUsernameExistsService({ userId }: UsernameExistsParams): Promise<boolean> {
+type UsernameExistsParams = Pick<Username, "userId">;
+export async function checkIfUsernameExistsService(
+  { userId }: UsernameExistsParams,
+): Promise<boolean> {
   console.log("Checking if username exists in turso...");
-  const username = await getUsernameTableByUserId({ userId })
+  const username = await getUsernameTableByUserId({ userId });
 
-  console.log('username fetched from db:\n', { username })
+  console.log("username fetched from db:\n", { username });
   return Boolean(username);
+}
+
+type GetUserIdByUsernameParams = Pick<NewUsername, "username">;
+export async function getUserIdByUsername(
+  { username }: GetUserIdByUsernameParams,
+) {
+  return db.select({ userId: usernames.userId }).from(usernames).where(
+    eq(usernames.username, username),
+  );
 }
