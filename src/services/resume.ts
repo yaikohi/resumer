@@ -1,7 +1,7 @@
 import { desc, eq } from "drizzle-orm";
 import { db } from "~/db";
 import { resumes, usernames, users } from "~/db/schema";
-import type { NewResume, NewUsername, Resume, Username } from "~/db/types";
+import type { NewResume, NewUsername, Resume } from "~/db/types";
 
 /**
  * Creates a new resume (post) in the database.
