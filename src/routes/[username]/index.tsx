@@ -20,8 +20,15 @@ export default component$(() => {
   return (
     <>
       <div class="flex flex-col p-4 mt-20">
-        <div class="pr-2">
-          <img src={user.image} class="rounded-full" width={120} height={120} />
+        <div class="mr-20">
+          {user.image && (
+            <img
+              src={user.image}
+              class="rounded-full"
+              width={120}
+              height={120}
+            />
+          )}
         </div>
         <div class="flex flex-col">
           <p class="font-bold">{user.name}</p>
