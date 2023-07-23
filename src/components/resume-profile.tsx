@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import {
   formAction$,
-  InitialValues,
+ type InitialValues,
   useForm,
   zodForm$,
 } from "@modular-forms/qwik";

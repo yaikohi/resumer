@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "f3a51cb4-ac29-4b54-800b-1ed6ebb7dedf",
-  "prevId": "24dbddca-4a94-46ac-9652-a0fc339d3934",
+  "id": "0cddb69b-af44-408b-8773-4d1b02fd4032",
+  "prevId": "6f384c17-6502-44c0-99e0-003a8b065a5c",
   "tables": {
     "accounts": {
       "name": "accounts",
@@ -140,7 +140,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'2023-07-13T10:46:21.930Z'"
+          "default": "'2023-07-13T10:50:46.396Z'"
         }
       },
       "indexes": {},
@@ -234,7 +234,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'2023-07-13T10:46:21.930Z'"
+          "default": "'2023-07-13T10:50:46.396Z'"
         }
       },
       "indexes": {},

@@ -1,7 +1,7 @@
 import { desc, eq } from "drizzle-orm";
 import { db } from "~/db";
 import { resumes, usernames, users } from "~/db/schema";
-import type { NewResume, Resume } from "~/db/types";
+import type { NewResume, NewUsername, Resume } from "~/db/types";
 
 /**
  * Creates a new resume (post) in the database.
@@ -57,3 +57,40 @@ export const deleteResumeFromDb = async (resumeId: string) => {
   console.log("Deleted resume with id:", resumeId);
   return await db.delete(resumes).where(eq(resumes.id, resumeId)).run();
 };
+
+type GetUserPublicResumesParams = Pick<NewUsername, "username">;
+/** Retrieve all resumes by a user */
+export async function getUserPublicResumes(
+  { username }: GetUserPublicResumesParams,
+) {
+  const { userId } = await db.select({ userId: usernames.userId }).from(
+    usernames,
+  )
+    .where(
+      eq(usernames.username, username),
+    ).get();
+
+  // const userResumes = await db.select().from(resumes).where(
+  //  eq(resumes.userId, userId),
+  // ).get();
+  const userResumes = await db.select({
+    id: resumes.id,
+    content: resumes.content,
+    user: {
+      id: resumes.userId,
+      username: usernames.username,
+      name: users.name,
+      email: users.email,
+      image: users.image,
+    },
+    createdAt: resumes.createdAt,
+  })
+    .from(resumes)
+    .where(eq(resumes.userId, userId))
+    .innerJoin(users, eq(users.id, resumes.userId))
+    .innerJoin(usernames, eq(users.id, usernames.userId))
+    .limit(100)
+    .orderBy(desc(resumes.createdAt))
+    .all();
+  return userResumes;
+}

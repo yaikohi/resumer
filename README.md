@@ -2,7 +2,7 @@
 
 > Send resumes on resumer, a qwik twitter.
 > Pun on the resumability feature of qwikjs....
-> twitter clone written with qwik.
+> twitter clone...
 
 other shiny things
 

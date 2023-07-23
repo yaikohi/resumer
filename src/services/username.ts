@@ -1,24 +1,55 @@
 import { eq } from "drizzle-orm";
 import { db } from "~/db";
 import { usernames } from "~/db/schema";
+import type { NewUsername, Username } from "~/db/types";
 
-export const addUsernameToDb = async (userId: string, username: string) => {
+/** Non exported statement only used in this file. */
+async function createUsernameTable(
+  { id, userId, username, createdAt }: NewUsername,
+) {
+  return await db.insert(usernames).values({
+    id,
+    userId,
+    username,
+    createdAt,
+  }).run();
+}
+
+async function getUsernameTableByUserId({ userId }: Pick<Username, "userId">) {
+  return await db.select().from(usernames).where(
+    eq(usernames.userId, userId),
+  ).get();
+}
+
+type NewUsernameParams = Pick<NewUsername, "userId" | "username">;
+export async function createUsernameService(
+  { userId, username }: NewUsernameParams,
+) {
   console.log("Adding username to db:", username);
-  return await db
-    .insert(usernames)
-    .values({
-      id: crypto.randomUUID(),
-      userId,
-      username,
-    })
-    .run();
-};
+  return await createUsernameTable({
+    id: crypto.randomUUID(),
+    userId,
+    username,
+    createdAt: new Date().toISOString(),
+  });
+}
 
-export const getUsernameByIdFromDb = async (userId: string) => {
-  console.log("Retrieving username from db.\nuserId:", userId);
-  return await db
-    .selectDistinct()
-    .from(usernames)
-    .where(eq(usernames.id, userId))
-    .get();
-};
+type UsernameExistsParams = Pick<Username, "userId">;
+export async function checkIfUsernameExistsService(
+  { userId }: UsernameExistsParams,
+): Promise<boolean> {
+  console.log("Checking if username exists in turso...");
+  const username = await getUsernameTableByUserId({ userId });
+
+  console.log("username fetched from db:\n", { username });
+  return Boolean(username);
+}
+
+type GetUserIdByUsernameParams = Pick<NewUsername, "username">;
+export async function getUserIdByUsername(
+  { username }: GetUserIdByUsernameParams,
+) {
+  return db.select({ userId: usernames.userId }).from(usernames).where(
+    eq(usernames.username, username),
+  );
+}

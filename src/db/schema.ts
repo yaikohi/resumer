@@ -50,7 +50,7 @@ export const accounts = sqliteTable(
   },
   (account) => ({
     compoundKey: primaryKey(account.provider, account.providerAccountId),
-  })
+  }),
 );
 
 export const sessions = sqliteTable("sessions", {
@@ -70,7 +70,7 @@ export const verificationTokens = sqliteTable(
     token: text("token").notNull(),
     expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
   },
-  (vt) => ({ compoundKey: primaryKey(vt.identifier, vt.token) })
+  (vt) => ({ compoundKey: primaryKey(vt.identifier, vt.token) }),
 );
 
 export const defaultSchema = {
@@ -117,6 +117,7 @@ export const usernames = sqliteTable("usernames", {
       onDelete: "cascade",
     })
     .notNull(),
+
   username: text("username").notNull(),
   createdAt: text("createdAt").default(new Date().toISOString()).notNull(),
 });
