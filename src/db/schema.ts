@@ -1,17 +1,27 @@
 /**
+ * ************************************************************************************
  * How to save timestamps in sqlite
  * @see https://www.sqlitetutorial.net/sqlite-date/
- *
+ * ************************************************************************************
  * Drizzle docs
  * @see https://orm.drizzle.team/docs/
+ * ************************************************************************************
  */
 import type { AdapterAccount } from "@auth/core/adapters";
+import { relations } from "drizzle-orm";
+import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 import {
   integer,
   primaryKey,
   sqliteTable,
   text,
 } from "drizzle-orm/sqlite-core";
+
+/*
+ *********************************************************************
+ * AuthJS required tables ********************************************
+ *********************************************************************
+ */
 
 export const users = sqliteTable("users", {
   id: text("id").notNull().primaryKey(),
@@ -73,13 +83,10 @@ export const defaultSchema = {
 export type DefaultSchema = typeof defaultSchema;
 export interface CustomSchema extends DefaultSchema {}
 
-/**
- * Resume
- *
- * @field id - integer
- * @field content - string
- * @field profileId - FK - string
- * @field createdAt - string ('ISO8601')
+/*
+ *********************************************************************
+ * Custom tables *****************************************************
+ *********************************************************************
  */
 export const resumes = sqliteTable("resumes", {
   id: text("id").notNull().primaryKey(),
@@ -90,10 +97,62 @@ export const resumes = sqliteTable("resumes", {
   createdAt: text("createdAt").default(new Date().toISOString()).notNull(),
 });
 
+export const replies = sqliteTable("replies", {
+  id: text("id").notNull().primaryKey(),
+  content: text("content").notNull(),
+  userId: text("userId")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  resumeId: text("resumeId")
+    .references(() => resumes.id, { onDelete: "cascade" })
+    .notNull(),
+  replyId: text("replyId").references((): AnySQLiteColumn => replies.id),
+  createdAt: text("createdAt").default(new Date().toISOString()).notNull(),
+});
+
 export const usernames = sqliteTable("usernames", {
   id: text("id").notNull().primaryKey(),
-  userId: text("userId").references(() => users.id, {
-    onDelete: "cascade",
-  }),
+  userId: text("userId")
+    .references(() => users.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
   username: text("username").notNull(),
+  createdAt: text("createdAt").default(new Date().toISOString()).notNull(),
 });
+
+/**
+ * *********************************************************************
+ * Relations ***********************************************************
+ ***********************************************************************
+ */
+
+export const usersRelations = relations(users, ({ one, many }) => ({
+  resumes: many(resumes),
+  replies: many(replies),
+  username: one(usernames, {
+    fields: [users.id],
+    references: [usernames.userId],
+  }),
+}));
+
+export const resumesRelations = relations(resumes, ({ one }) => ({
+  author: one(users, {
+    fields: [resumes.userId],
+    references: [users.id],
+  }),
+}));
+
+export const repliesRelations = relations(replies, ({ one }) => ({
+  author: one(users, {
+    fields: [replies.userId],
+    references: [users.id],
+  }),
+}));
+
+export const usernamesRelations = relations(usernames, ({ one }) => ({
+  user: one(users, {
+    fields: [usernames.userId],
+    references: [users.id],
+  }),
+}));
