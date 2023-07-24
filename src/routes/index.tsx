@@ -36,12 +36,13 @@ export default component$(() => {
       <div class="mt-8">
         {/* List of resumes */}
         <ul class="flex flex-col w-full">
-          {resumes.value.map((resume) => (
+          {resumes.value.slice(0, 1).map((resume) => (
             <li class="w-full mx-auto" key={resume.id}>
               <Resume
                 id={resume.id}
-                signedInUserOwnsResume={resume.user.id ===
-                  session.value?.user.id}
+                signedInUserOwnsResume={
+                  resume.user.id === session.value?.user.id
+                }
                 name={resume.user.name}
                 username={resume.user.username}
                 content={resume.content}
@@ -61,7 +62,9 @@ export default component$(() => {
   );
 });
 
-{/* The profile header component of the page that shows when you're logged in.*/ }
+{
+  /* The profile header component of the page that shows when you're logged in.*/
+}
 export const ResumeProfile = component$(() => {
   const session = useAuthSession();
   return (
@@ -87,7 +90,9 @@ export const ResumeProfile = component$(() => {
   );
 });
 
-{/* Where the resumes are created... */ }
+{
+  /* Where the resumes are created... */
+}
 const resumeCreateSchema = z.object({
   content: z
     .string()
@@ -105,7 +110,7 @@ export const useResumeCreateAction = formAction$<TResumeCreateForm>(
       content: data.content,
     });
   },
-  zodForm$(resumeCreateSchema),
+  zodForm$(resumeCreateSchema)
 );
 
 export const useResumeCreateLoader = routeLoader$<
@@ -126,7 +131,10 @@ export const ResumeCreator = component$(() => {
   return (
     <>
       <div class={cn("w-full")}>
-        <Form class="flex flex-col place-items-center gap-2" onSubmit$={() => reset(postResumeform)}>
+        <Form
+          class="flex flex-col place-items-center gap-2"
+          onSubmit$={() => reset(postResumeform)}
+        >
           <Field name="content">
             {(field, props) => {
               return (
@@ -166,7 +174,7 @@ export const ResumeCreator = component$(() => {
                 "text-sm text-primary-foreground font-medixum",
                 "transition-colors",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                "disabled:pointer-events-none disabled:opacity-50",
+                "disabled:pointer-events-none disabled:opacity-50"
               )}
             >
               Send resume
